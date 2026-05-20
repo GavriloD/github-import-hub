@@ -168,7 +168,8 @@ function NuroLabDashboard() {
         style={{
           padding: "10px 28px 16px",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <span
@@ -181,6 +182,23 @@ function NuroLabDashboard() {
         >
           BCA SEE SUMMER TOURNAMENT 2026
         </span>
+        <a
+          href="https://www.linkedin.com/in/gavrilo-dodi%C4%87/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontFamily: "var(--font-label)",
+            fontSize: 9,
+            color: "var(--text-dim)",
+            letterSpacing: "0.12em",
+            textDecoration: "none",
+            transition: "color 0.22s ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-dim)")}
+        >
+          made by gavrilo
+        </a>
       </div>
 
       <FocusHook />
