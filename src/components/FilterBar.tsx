@@ -10,12 +10,10 @@ const PRESETS = [
 
 export const KPI_OPTIONS = [
   'Revenue',
-  'Korisnici',
   'CAC',
-  'LTV',
+  '30d Retention',
+  '90d Retention',
   'NPS',
-  'Market Share',
-  'Retention',
 ]
 
 interface FilterBarProps {

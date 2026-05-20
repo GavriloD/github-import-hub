@@ -57,60 +57,39 @@ function NuroLabDashboard() {
           borderBottom: "1px solid var(--border)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              border: "1px solid rgba(126,179,212,0.25)",
-              background: "rgba(126,179,212,0.06)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: "var(--font-serif)",
-              fontSize: 16,
-              fontWeight: 500,
-              color: "var(--nl-accent)",
-            }}
-          >
-            N
-          </div>
+        {/* NuroLab wordmark logo */}
+        <div
+          style={{
+            background: "rgba(126,179,212,0.06)",
+            border: "1px solid rgba(126,179,212,0.18)",
+            borderRadius: 8,
+            padding: "6px 14px",
+          }}
+        >
           <span
             style={{
-              fontFamily: "var(--font-label)",
-              fontSize: 13,
-              letterSpacing: "0.18em",
-              color: "var(--text-muted)",
+              fontFamily: "var(--font-serif)",
+              fontSize: 16,
+              fontWeight: 400,
+              color: "var(--text)",
+              letterSpacing: "0.02em",
             }}
           >
-            NUROLAB
+            NuroLab
           </span>
         </div>
 
-        <div style={{ textAlign: "right" }}>
-          <div
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: 16,
-              fontWeight: 300,
-              color: "var(--text)",
-              letterSpacing: "0.08em",
-            }}
-          >
-            ZenFlow
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-label)",
-              fontSize: 10,
-              color: "var(--text-dim)",
-              letterSpacing: "0.12em",
-              marginTop: 1,
-            }}
-          >
-            2025 — 2027
-          </div>
+        {/* ZenFlow — bez datuma */}
+        <div
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: 16,
+            fontWeight: 300,
+            color: "var(--text)",
+            letterSpacing: "0.08em",
+          }}
+        >
+          ZenFlow
         </div>
       </div>
 
@@ -189,13 +168,11 @@ function NuroLabDashboard() {
           style={{
             fontFamily: "var(--font-label)",
             fontSize: 11,
-            color: "var(--text-dim)",
+            color: "var(--accent)",
             letterSpacing: "0.12em",
-            textDecoration: "none",
-            transition: "color 0.22s ease",
+            textDecoration: "underline",
+            textUnderlineOffset: "3px",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-dim)")}
         >
           made by gavrilo
         </a>
