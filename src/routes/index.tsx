@@ -69,7 +69,7 @@ function NuroLabDashboard() {
               alignItems: "center",
               justifyContent: "center",
               fontFamily: "var(--font-serif)",
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: 500,
               color: "var(--nl-accent)",
             }}
@@ -79,7 +79,7 @@ function NuroLabDashboard() {
           <span
             style={{
               fontFamily: "var(--font-label)",
-              fontSize: 11,
+              fontSize: 13,
               letterSpacing: "0.18em",
               color: "var(--text-muted)",
             }}
@@ -103,7 +103,7 @@ function NuroLabDashboard() {
           <div
             style={{
               fontFamily: "var(--font-label)",
-              fontSize: 8,
+              fontSize: 10,
               color: "var(--text-dim)",
               letterSpacing: "0.12em",
               marginTop: 1,
@@ -174,7 +174,7 @@ function NuroLabDashboard() {
         <span
           style={{
             fontFamily: "var(--font-label)",
-            fontSize: 8,
+            fontSize: 10,
             color: "var(--text-dim)",
             letterSpacing: "0.15em",
           }}

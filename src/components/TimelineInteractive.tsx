@@ -232,18 +232,18 @@ export function TimelineInteractive({
           if (!isActive && !isYearStart) return null
           const year = q.id.split('-')[1]
           return (
-            <text
-              key={q.id}
-              x={x}
-              y={LABEL_Y}
-              textAnchor="middle"
-              fontSize={9}
-              fontFamily="var(--font-label)"
-              letterSpacing="0.06em"
-              fill={isActive ? TYPE_COLORS[q.type] : 'var(--text-dim)'}
-            >
-              {isYearStart && !isActive ? year : q.shortLabel}
-            </text>
+          <text
+            key={q.id}
+            x={x}
+            y={LABEL_Y}
+            textAnchor="middle"
+            fontSize={11}
+            fontFamily="var(--font-label)"
+            letterSpacing="0.06em"
+            fill={isActive ? TYPE_COLORS[q.type] : 'var(--text-dim)'}
+          >
+            {isYearStart && !isActive ? year : q.shortLabel}
+          </text>
           )
         })}
       </svg>
