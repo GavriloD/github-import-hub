@@ -85,11 +85,10 @@ function NuroLabDashboard() {
           <div
             style={{
               fontFamily: "var(--font-serif)",
-              fontSize: 18,
-              fontStyle: "italic",
-              fontWeight: 400,
+              fontSize: 16,
+              fontWeight: 300,
               color: "var(--text)",
-              letterSpacing: "-0.01em",
+              letterSpacing: "0.08em",
             }}
           >
             ZenFlow

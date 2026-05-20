@@ -82,7 +82,7 @@ export function KPICard({ quarter, kpiLabel }: KPICardProps) {
           fontWeight: 300,
           lineHeight: 1,
           color: kpi?.value ? 'var(--text)' : 'var(--text-dim)',
-          letterSpacing: '-0.02em',
+          letterSpacing: '-0.01em',
         }}>
           {kpi?.value ?? '—'}
         </div>

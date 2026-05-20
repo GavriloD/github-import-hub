@@ -63,7 +63,6 @@ export function FocusHook() {
         fontFamily: 'var(--font-serif)',
         fontSize: 32,
         fontWeight: 300,
-        fontStyle: 'italic',
         color: 'var(--text)',
         letterSpacing: '-0.01em',
         textAlign: 'center',
