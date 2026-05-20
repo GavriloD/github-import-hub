@@ -38,11 +38,11 @@ export const KPI_DUMMY: Record<string, KpiSeries> = {
 // 5 complementary, brand-safe colors assigned by selection order.
 // 1st clicked KPI = palette[0], 2nd = palette[1], etc.
 export const KPI_PALETTE: string[] = [
-  '#7eb3d4', // steel blue
-  '#c4a96b', // gold
-  '#6bbfa0', // sage green
-  '#9b87c4', // muted mauve
-  '#d49a7e', // soft terracotta
+  '#7eb3d4', // steel blue  — Revenue
+  '#6bbfa0', // sage green  — CAC
+  '#c4a96b', // gold        — 30d Retention
+  '#c97a7a', // coral red   — 90d Retention
+  '#a78bd4', // violet      — NPS
 ]
 
 export const MAX_KPI_SELECTION = 5
