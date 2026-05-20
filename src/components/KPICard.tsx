@@ -74,7 +74,7 @@ export function KPICard({ quarter, kpiLabel }: KPICardProps) {
       {/* KPI value */}
       <div style={{
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.12s ease',
+        transition: 'opacity 0.22s ease',
       }}>
         <div style={{
           fontFamily: 'var(--font-serif)',

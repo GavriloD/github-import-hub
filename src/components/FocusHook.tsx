@@ -1,16 +1,27 @@
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 
 export function FocusHook() {
   const [show, setShow] = useState(false)
   const [visible, setVisible] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const reset = useCallback(() => setShow(false), [])
+  const dismiss = useCallback(() => setShow(false), [])
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => setShow(true), 18000)
+  }, [])
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(true), 18000)
-    return () => clearTimeout(timer)
-  }, [])
+    resetTimer()
+    const events = ['pointermove', 'pointerdown', 'keydown', 'scroll']
+    events.forEach((e) => window.addEventListener(e, resetTimer, { passive: true }))
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      events.forEach((e) => window.removeEventListener(e, resetTimer))
+    }
+  }, [resetTimer])
 
   useEffect(() => {
     if (show) {
@@ -25,8 +36,8 @@ export function FocusHook() {
 
   return (
     <div
-      onClick={reset}
-      onTouchStart={reset}
+      onClick={dismiss}
+      onTouchStart={dismiss}
       style={{
         position: 'fixed',
         inset: 0,

@@ -40,7 +40,7 @@ export function FilterBar({ preset, kpi, onPreset, onKpi }: FilterBarProps) {
                 borderRadius: 6,
                 border: `1px solid ${active ? 'var(--accent)' : 'var(--border-mid)'}`,
                 background: active ? 'rgba(126,179,212,0.1)' : 'transparent',
-                transition: 'all 0.15s ease',
+                transition: 'all 0.22s ease',
               }}
             >
               <div style={{
@@ -89,7 +89,7 @@ export function FilterBar({ preset, kpi, onPreset, onKpi }: FilterBarProps) {
                 fontSize: 10,
                 letterSpacing: '0.08em',
                 color: active ? 'var(--accent)' : 'var(--text-dim)',
-                transition: 'all 0.15s ease',
+                transition: 'all 0.22s ease',
               }}
             >
               {k.toUpperCase()}
