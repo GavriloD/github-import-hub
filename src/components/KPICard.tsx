@@ -135,7 +135,7 @@ function SingleKpi({ label, globalIndex, selected }: { label: string; globalInde
       <div style={{
         display: 'flex', alignItems: 'center', gap: 6,
         fontFamily: 'var(--font-label)',
-        fontSize: 10,
+        fontSize: 11,
         color: 'var(--text-dim)',
         letterSpacing: '0.1em',
         marginTop: 8,
@@ -161,7 +161,7 @@ function KpiRow({ label, globalIndex, selected }: { label: string; globalIndex: 
       <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, flexShrink: 0 }} />
       <span style={{
         fontFamily: 'var(--font-label)',
-        fontSize: 10,
+        fontSize: 11,
         letterSpacing: '0.1em',
         color: 'var(--text-muted)',
         minWidth: 90,
