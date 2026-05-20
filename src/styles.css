@@ -135,10 +135,93 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-label);
+    overscroll-behavior: none;
   }
+
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    user-select: none;
+  }
+}
+
+/* ── NuroLab Design System ── */
+
+:root {
+  --navy-deep: #0d1520;
+  --navy: #1a2535;
+  --navy-mid: #233047;
+  --navy-light: #2e3f5c;
+  --slate: #4a6080;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-mid: rgba(74, 96, 128, 0.3);
+  --text: #e8edf4;
+  --text-muted: #7a90a8;
+  --text-dim: #3d526a;
+  --nl-accent: #7eb3d4;
+  --accent-glow: rgba(126, 179, 212, 0.15);
+  --green: #6bbfa0;
+  --red: #c97a7a;
+  --gold: #c4a96b;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-label: 'DM Mono', 'Courier New', monospace;
+}
+
+/* ── Layout ── */
+
+.page-root {
+  min-height: 100dvh;
+  background: var(--navy-deep);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .page-root {
+    max-width: min(1280px, 100%);
+    display: grid;
+    grid-template-areas:
+      "header  header"
+      "filters filters"
+      "kpi     timeline"
+      "footer  footer";
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    min-height: 100dvh;
+  }
+
+  .area-header   { grid-area: header; }
+  .area-filters  { grid-area: filters; }
+  .area-kpi {
+    grid-area: kpi;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .area-timeline {
+    grid-area: timeline;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .area-footer { grid-area: footer; }
 }
