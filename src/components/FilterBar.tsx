@@ -36,7 +36,6 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
       setTimeout(() => setShakeKey(null), 400)
       return
     }
-    if (isSelected && selectedKpis.length === 1) return // keep at least one
     onToggleKpi(k)
   }
 
