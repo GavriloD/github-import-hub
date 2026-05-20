@@ -60,7 +60,7 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
             >
               <div style={{
                 fontFamily: 'var(--font-label)',
-                fontSize: 13,
+                fontSize: 15,
                 fontWeight: active ? 500 : 300,
                 color: active ? 'var(--accent)' : 'var(--text-muted)',
                 letterSpacing: '0.05em',
@@ -69,7 +69,7 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
               </div>
               <div style={{
                 fontFamily: 'var(--font-label)',
-                fontSize: 9,
+                fontSize: 11,
                 color: active ? 'rgba(126,179,212,0.6)' : 'var(--text-dim)',
                 letterSpacing: '0.08em',
                 marginTop: 1,
@@ -99,12 +99,12 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
               onClick={() => handleChipClick(k)}
               style={{
                 flexShrink: 0,
-                padding: '5px 10px',
+                padding: '6px 12px',
                 borderRadius: 20,
                 border: `1px solid ${active ? color : 'var(--border-mid)'}`,
                 background: active ? `${color}1f` : 'transparent',
                 fontFamily: 'var(--font-label)',
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: '0.08em',
                 color: active ? color : 'var(--text-dim)',
                 transition: 'all 0.22s ease',
@@ -129,8 +129,9 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
           marginLeft: 'auto',
           flexShrink: 0,
           fontFamily: 'var(--font-label)',
-          fontSize: 9,
-          color: 'var(--text-dim)',
+          fontSize: 16,
+          fontWeight: 500,
+          color: selectedKpis.length === MAX_KPI_SELECTION ? 'var(--accent)' : 'var(--text-dim)',
           letterSpacing: '0.1em',
           paddingLeft: 8,
         }}>

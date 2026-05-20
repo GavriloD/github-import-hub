@@ -69,7 +69,7 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
         <span style={{
           fontFamily: 'var(--font-label)',
-          fontSize: 10,
+          fontSize: 11,
           color: 'var(--text-dim)',
           letterSpacing: '0.1em',
         }}>
@@ -77,7 +77,7 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
         </span>
         <span style={{
           fontFamily: 'var(--font-label)',
-          fontSize: 9,
+          fontSize: 10,
           letterSpacing: '0.12em',
           color: typeColor,
           border: `1px solid ${typeColor}33`,
@@ -125,7 +125,7 @@ function SingleKpi({ label, globalIndex, selected }: { label: string; globalInde
         {data?.delta && (
           <span style={{
             fontFamily: 'var(--font-label)',
-            fontSize: 11,
+            fontSize: 13,
             color: data.deltaType === 'up' ? '#6bbfa0' : data.deltaType === 'down' ? '#c97a7a' : 'var(--text-dim)',
           }}>
             {data.deltaType === 'up' ? '↑' : data.deltaType === 'down' ? '↓' : '·'} {data.delta}
@@ -135,7 +135,7 @@ function SingleKpi({ label, globalIndex, selected }: { label: string; globalInde
       <div style={{
         display: 'flex', alignItems: 'center', gap: 6,
         fontFamily: 'var(--font-label)',
-        fontSize: 10,
+        fontSize: 11,
         color: 'var(--text-dim)',
         letterSpacing: '0.1em',
         marginTop: 8,
@@ -161,7 +161,7 @@ function KpiRow({ label, globalIndex, selected }: { label: string; globalIndex: 
       <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, flexShrink: 0 }} />
       <span style={{
         fontFamily: 'var(--font-label)',
-        fontSize: 10,
+        fontSize: 11,
         letterSpacing: '0.1em',
         color: 'var(--text-muted)',
         minWidth: 90,
@@ -184,7 +184,7 @@ function KpiRow({ label, globalIndex, selected }: { label: string; globalIndex: 
         {data?.delta && (
           <span style={{
             fontFamily: 'var(--font-label)',
-            fontSize: 10,
+            fontSize: 11,
             color: data.deltaType === 'up' ? '#6bbfa0' : data.deltaType === 'down' ? '#c97a7a' : 'var(--text-dim)',
             minWidth: 44,
             textAlign: 'right',
