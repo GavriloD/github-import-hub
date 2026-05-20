@@ -1,6 +1,6 @@
-
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
+import { KPI_DUMMY, KPI_COLORS } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -21,14 +21,18 @@ interface TimelineInteractiveProps {
   quarters: Quarter[]
   activeIndex: number
   onActiveChange: (i: number) => void
-  kpiLabel: string
+  kpiLabels: string[]
+  // index into DATA.quarters of the first visible quarter — so we can read
+  // dummy values from KPI_DUMMY using the global quarter index.
+  startOffset: number
 }
 
 export function TimelineInteractive({
   quarters,
   activeIndex,
   onActiveChange,
-  kpiLabel,
+  kpiLabels,
+  startOffset,
 }: TimelineInteractiveProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   const [svgW, setSvgW] = useState(340)
@@ -68,25 +72,24 @@ export function TimelineInteractive({
 
   const onPointerUp = useCallback(() => setDragging(false), [])
 
-  // Build sparkline path from KPI values
-  const kpiValues = quarters.map((q) => {
-    const match = q.kpis.find(
-      (k) => k.label.toLowerCase().includes(kpiLabel.toLowerCase()) ||
-             kpiLabel.toLowerCase().includes(k.label.toLowerCase().split(' ')[0])
-    )
-    const raw = match?.value ?? null
-    if (!raw) return null
-    const num = parseFloat(raw.replace(/[^0-9.]/g, ''))
-    return isNaN(num) ? null : num
-  })
+  // Build one normalized series per selected KPI.
+  const series = kpiLabels
+    .map((label) => {
+      const src = KPI_DUMMY[label]
+      if (!src) return null
+      const slice = src.values.slice(startOffset, startOffset + n)
+      const max = Math.max(...slice)
+      const min = Math.min(...slice)
+      return { label, color: KPI_COLORS[label] ?? '#7eb3d4', values: slice, max, min }
+    })
+    .filter((s): s is NonNullable<typeof s> => !!s)
 
-  const hasData = kpiValues.some((v) => v !== null)
-  const maxVal = hasData ? Math.max(...kpiValues.filter((v): v is number => v !== null)) : 0
+  const hasData = series.length > 0
 
   const activeX = getX(activeIndex)
   const activeQ = quarters[activeIndex]
 
-  // Year separators: mark where year changes
+  // Year separators
   const yearBreaks: number[] = []
   quarters.forEach((q, i) => {
     if (i > 0) {
@@ -95,6 +98,8 @@ export function TimelineInteractive({
       if (thisYear !== prevYear) yearBreaks.push(i)
     }
   })
+
+  const showArea = series.length === 1
 
   return (
     <div style={{ padding: '0 0 4px' }}>
@@ -108,8 +113,6 @@ export function TimelineInteractive({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        {/* ── Chart area ── */}
-
         {/* Chart baseline */}
         <line
           x1={PAD} y1={CHART_H} x2={svgW - PAD} y2={CHART_H}
@@ -118,51 +121,45 @@ export function TimelineInteractive({
 
         {hasData ? (
           <>
-            {/* Filled area */}
             <defs>
-              <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.01" />
-              </linearGradient>
+              {series.map((s, idx) => (
+                <linearGradient key={s.label} id={`sparkGrad-${idx}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={s.color} stopOpacity="0.2" />
+                  <stop offset="100%" stopColor={s.color} stopOpacity="0.01" />
+                </linearGradient>
+              ))}
             </defs>
-            <path
-              d={buildAreaPath(kpiValues, CHART_H, maxVal, getX, n)}
-              fill="url(#sparkGrad)"
-            />
-            <path
-              d={buildLinePath(kpiValues, CHART_H, maxVal, getX, n)}
-              fill="none"
-              stroke="var(--accent)"
-              strokeWidth={1.5}
-              strokeLinejoin="round"
-            />
-          </>
-        ) : (
-          /* No-data ghost line */
-          <>
-            <defs>
-              <linearGradient id="ghostGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="rgba(74,96,128,0)" />
-                <stop offset="30%" stopColor="rgba(74,96,128,0.12)" />
-                <stop offset="70%" stopColor="rgba(74,96,128,0.12)" />
-                <stop offset="100%" stopColor="rgba(74,96,128,0)" />
-              </linearGradient>
-            </defs>
-            <rect x={PAD} y={CHART_H - 40} width={usable} height={40} fill="url(#ghostGrad)" />
-            <line
-              x1={PAD} y1={CHART_H - 4} x2={svgW - PAD} y2={CHART_H - 4}
-              stroke="rgba(74,96,128,0.25)"
-              strokeWidth={1}
-              strokeDasharray="3 5"
-            />
-            {/* Ghost dots on dashed line */}
-            {quarters.map((_, i) => (
-              <circle key={i} cx={getX(i)} cy={CHART_H - 4} r={2} fill="rgba(74,96,128,0.3)" />
+
+            {series.map((s, idx) => (
+              <g key={s.label}>
+                {showArea && (
+                  <path
+                    d={buildAreaPath(s.values, CHART_H, s.min, s.max, getX)}
+                    fill={`url(#sparkGrad-${idx})`}
+                  />
+                )}
+                <path
+                  d={buildLinePath(s.values, CHART_H, s.min, s.max, getX)}
+                  fill="none"
+                  stroke={s.color}
+                  strokeWidth={1.5}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  opacity={0.9}
+                />
+              </g>
             ))}
           </>
+        ) : (
+          <line
+            x1={PAD} y1={CHART_H - 4} x2={svgW - PAD} y2={CHART_H - 4}
+            stroke="rgba(74,96,128,0.25)"
+            strokeWidth={1}
+            strokeDasharray="3 5"
+          />
         )}
 
-        {/* Active cursor — vertical line from chart to track */}
+        {/* Active cursor */}
         <line
           x1={activeX} y1={0}
           x2={activeX} y2={TRACK_Y - 6}
@@ -172,26 +169,26 @@ export function TimelineInteractive({
           strokeDasharray="3 3"
         />
 
-        {/* Active chart dot */}
-        {hasData && (
+        {/* One dot per series at active index */}
+        {series.map((s) => (
           <circle
+            key={`dot-${s.label}`}
             cx={activeX}
-            cy={getChartY(kpiValues[activeIndex], CHART_H, maxVal)}
-            r={4}
-            fill={TYPE_COLORS[activeQ?.type ?? 'neutral']}
+            cy={getY(s.values[activeIndex], CHART_H, s.min, s.max)}
+            r={3.5}
+            fill={s.color}
             stroke="var(--navy-deep)"
-            strokeWidth={2}
+            strokeWidth={1.5}
           />
-        )}
+        ))}
 
-        {/* ── Track ── */}
+        {/* Track */}
         <line
           x1={PAD} y1={TRACK_Y}
           x2={svgW - PAD} y2={TRACK_Y}
           stroke="rgba(74,96,128,0.2)" strokeWidth={1}
         />
 
-        {/* Year break ticks */}
         {yearBreaks.map((bi) => (
           <line
             key={bi}
@@ -227,7 +224,7 @@ export function TimelineInteractive({
           )
         })}
 
-        {/* Quarter labels — show active + year start dots */}
+        {/* Quarter labels */}
         {quarters.map((q, i) => {
           const x = getX(i)
           const isActive = i === activeIndex
@@ -254,37 +251,33 @@ export function TimelineInteractive({
   )
 }
 
-function getChartY(val: number | null, chartH: number, maxVal: number): number {
-  if (!val || maxVal === 0) return chartH - 4
-  const fraction = val / maxVal
-  return chartH - fraction * (chartH - 10)
+function getY(val: number, chartH: number, min: number, max: number): number {
+  if (max === min) return chartH - (chartH - 10) / 2
+  const fraction = (val - min) / (max - min)
+  return chartH - fraction * (chartH - 10) - 4
 }
 
 function buildLinePath(
-  values: (number | null)[],
+  values: number[],
   chartH: number,
-  maxVal: number,
+  min: number,
+  max: number,
   getX: (i: number) => number,
-  n: number
 ): string {
-  const parts: string[] = []
-  values.forEach((v, i) => {
-    const x = getX(i)
-    const y = getChartY(v, chartH, maxVal)
-    parts.push(`${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`)
-  })
-  return parts.join(' ')
+  return values
+    .map((v, i) => `${i === 0 ? 'M' : 'L'}${getX(i).toFixed(1)},${getY(v, chartH, min, max).toFixed(1)}`)
+    .join(' ')
 }
 
 function buildAreaPath(
-  values: (number | null)[],
+  values: number[],
   chartH: number,
-  maxVal: number,
+  min: number,
+  max: number,
   getX: (i: number) => number,
-  n: number
 ): string {
-  const line = buildLinePath(values, chartH, maxVal, getX, n)
-  const lastX = getX(n - 1).toFixed(1)
+  const line = buildLinePath(values, chartH, min, max, getX)
+  const lastX = getX(values.length - 1).toFixed(1)
   const firstX = getX(0).toFixed(1)
   return `${line} L${lastX},${chartH} L${firstX},${chartH} Z`
 }
