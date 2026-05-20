@@ -188,7 +188,7 @@ function NuroLabDashboard() {
           rel="noopener noreferrer"
           style={{
             fontFamily: "var(--font-label)",
-            fontSize: 9,
+            fontSize: 11,
             color: "var(--text-dim)",
             letterSpacing: "0.12em",
             textDecoration: "none",
