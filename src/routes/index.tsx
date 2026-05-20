@@ -20,7 +20,7 @@ const PRESET_RANGES: Record<string, [number, number]> = {
 
 function NuroLabDashboard() {
   const [preset, setPreset] = useState("all");
-  const [selectedKpis, setSelectedKpis] = useState<string[]>([]);
+  const [selectedKpis, setSelectedKpis] = useState<string[]>(["Revenue"]);
   const [activeIndexInView, setActiveIndexInView] = useState(0);
 
   const [start, end] = PRESET_RANGES[preset];

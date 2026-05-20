@@ -214,15 +214,19 @@
   .area-kpi {
     grid-area: kpi;
     border-right: 1px solid var(--border);
+    background: var(--navy-deep);
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
   .area-timeline {
     grid-area: timeline;
+    background: var(--navy-deep);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
   }
-  .area-footer { grid-area: footer; }
+  .area-footer { grid-area: footer; background: var(--navy-deep); }
+  .area-header  { background: var(--navy-deep); }
+  .area-filters { background: var(--navy-deep); }
 }
