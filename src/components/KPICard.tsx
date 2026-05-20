@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_DUMMY, KPI_COLORS } from '@/data/kpi-values'
+import { KPI_DUMMY, colorForKpi } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -91,11 +91,11 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
 
       <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.22s ease' }}>
         {isSingle ? (
-          <SingleKpi label={kpiLabels[0]} globalIndex={globalIndex} />
+          <SingleKpi label={kpiLabels[0]} globalIndex={globalIndex} selected={kpiLabels} />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {kpiLabels.map((label) => (
-              <KpiRow key={label} label={label} globalIndex={globalIndex} />
+              <KpiRow key={label} label={label} globalIndex={globalIndex} selected={kpiLabels} />
             ))}
           </div>
         )}
@@ -104,9 +104,9 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
   )
 }
 
-function SingleKpi({ label, globalIndex }: { label: string; globalIndex: number }) {
+function SingleKpi({ label, globalIndex, selected }: { label: string; globalIndex: number; selected: string[] }) {
   const data = readValue(label, globalIndex)
-  const color = KPI_COLORS[label] ?? 'var(--accent)'
+  const color = colorForKpi(label, selected)
   return (
     <div>
       <div style={{
@@ -147,9 +147,9 @@ function SingleKpi({ label, globalIndex }: { label: string; globalIndex: number 
   )
 }
 
-function KpiRow({ label, globalIndex }: { label: string; globalIndex: number }) {
+function KpiRow({ label, globalIndex, selected }: { label: string; globalIndex: number; selected: string[] }) {
   const data = readValue(label, globalIndex)
-  const color = KPI_COLORS[label] ?? 'var(--accent)'
+  const color = colorForKpi(label, selected)
   return (
     <div style={{
       display: 'flex',

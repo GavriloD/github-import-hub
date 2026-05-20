@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KPI_COLORS, MAX_KPI_SELECTION } from '@/data/kpi-values'
+import { colorForKpi, MAX_KPI_SELECTION } from '@/data/kpi-values'
 
 const PRESETS = [
   { id: 'y1', label: 'Y1', sub: '2025' },
@@ -92,7 +92,7 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
       }}>
         {KPI_OPTIONS.map((k) => {
           const active = selectedKpis.includes(k)
-          const color = KPI_COLORS[k] ?? 'var(--accent)'
+          const color = active ? colorForKpi(k, selectedKpis) : 'var(--text-dim)'
           const shaking = shakeKey === k
           return (
             <button

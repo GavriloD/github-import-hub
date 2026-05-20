@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_DUMMY, KPI_COLORS } from '@/data/kpi-values'
+import { KPI_DUMMY, colorForKpi } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -80,7 +80,7 @@ export function TimelineInteractive({
       const slice = src.values.slice(startOffset, startOffset + n)
       const max = Math.max(...slice)
       const min = Math.min(...slice)
-      return { label, color: KPI_COLORS[label] ?? '#7eb3d4', values: slice, max, min }
+      return { label, color: colorForKpi(label, kpiLabels), values: slice, max, min }
     })
     .filter((s): s is NonNullable<typeof s> => !!s)
 
