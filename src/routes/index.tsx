@@ -20,7 +20,7 @@ const PRESET_RANGES: Record<string, [number, number]> = {
 
 function NuroLabDashboard() {
   const [preset, setPreset] = useState("all");
-  const [kpi, setKpi] = useState("Revenue");
+  const [selectedKpis, setSelectedKpis] = useState<string[]>(["Revenue"]);
   const [activeIndexInView, setActiveIndexInView] = useState(0);
 
   const [start, end] = PRESET_RANGES[preset];
@@ -31,10 +31,17 @@ function NuroLabDashboard() {
 
   const safeIndex = Math.min(activeIndexInView, visibleQuarters.length - 1);
   const activeQuarter = visibleQuarters[safeIndex];
+  const globalIndex = start + safeIndex;
 
   function handlePreset(p: string) {
     setPreset(p);
     setActiveIndexInView(0);
+  }
+
+  function handleToggleKpi(k: string) {
+    setSelectedKpis((prev) =>
+      prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]
+    );
   }
 
   return (
@@ -111,9 +118,9 @@ function NuroLabDashboard() {
       <div className="area-filters">
         <FilterBar
           preset={preset}
-          kpi={kpi}
+          selectedKpis={selectedKpis}
           onPreset={handlePreset}
-          onKpi={setKpi}
+          onToggleKpi={handleToggleKpi}
         />
       </div>
 
@@ -122,7 +129,13 @@ function NuroLabDashboard() {
         className="area-kpi"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
-        {activeQuarter && <KPICard quarter={activeQuarter} kpiLabel={kpi} />}
+        {activeQuarter && (
+          <KPICard
+            quarter={activeQuarter}
+            globalIndex={globalIndex}
+            kpiLabels={selectedKpis}
+          />
+        )}
       </div>
 
       {/* ── Timeline ── */}
@@ -142,7 +155,8 @@ function NuroLabDashboard() {
             quarters={visibleQuarters}
             activeIndex={safeIndex}
             onActiveChange={setActiveIndexInView}
-            kpiLabel={kpi}
+            kpiLabels={selectedKpis}
+            startOffset={start}
           />
         </div>
         <TypeLegend />

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { KPI_COLORS, MAX_KPI_SELECTION } from '@/data/kpi-values'
 
 const PRESETS = [
   { id: 'y1', label: 'Y1', sub: '2025' },
@@ -18,12 +20,26 @@ export const KPI_OPTIONS = [
 
 interface FilterBarProps {
   preset: string
-  kpi: string
+  selectedKpis: string[]
   onPreset: (p: string) => void
-  onKpi: (k: string) => void
+  onToggleKpi: (k: string) => void
 }
 
-export function FilterBar({ preset, kpi, onPreset, onKpi }: FilterBarProps) {
+export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: FilterBarProps) {
+  const [shakeKey, setShakeKey] = useState<string | null>(null)
+
+  function handleChipClick(k: string) {
+    const isSelected = selectedKpis.includes(k)
+    const atLimit = selectedKpis.length >= MAX_KPI_SELECTION
+    if (!isSelected && atLimit) {
+      setShakeKey(k)
+      setTimeout(() => setShakeKey(null), 400)
+      return
+    }
+    if (isSelected && selectedKpis.length === 1) return // keep at least one
+    onToggleKpi(k)
+  }
+
   return (
     <div style={{ borderBottom: '1px solid var(--border)' }}>
       {/* Presets */}
@@ -69,34 +85,67 @@ export function FilterBar({ preset, kpi, onPreset, onKpi }: FilterBarProps) {
       {/* KPI chips */}
       <div style={{
         display: 'flex',
+        alignItems: 'center',
         gap: 6,
         padding: '0 20px 12px',
         overflowX: 'auto',
       }}>
         {KPI_OPTIONS.map((k) => {
-          const active = kpi === k
+          const active = selectedKpis.includes(k)
+          const color = KPI_COLORS[k] ?? 'var(--accent)'
+          const shaking = shakeKey === k
           return (
             <button
               key={k}
-              onClick={() => onKpi(k)}
+              onClick={() => handleChipClick(k)}
               style={{
                 flexShrink: 0,
                 padding: '5px 10px',
                 borderRadius: 20,
-                border: `1px solid ${active ? 'var(--accent)' : 'var(--border-mid)'}`,
-                background: active ? 'rgba(126,179,212,0.08)' : 'transparent',
+                border: `1px solid ${active ? color : 'var(--border-mid)'}`,
+                background: active ? `${color}1f` : 'transparent',
                 fontFamily: 'var(--font-label)',
                 fontSize: 10,
                 letterSpacing: '0.08em',
-                color: active ? 'var(--accent)' : 'var(--text-dim)',
+                color: active ? color : 'var(--text-dim)',
                 transition: 'all 0.22s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                animation: shaking ? 'kpi-shake 0.32s ease' : undefined,
               }}
             >
+              {active && (
+                <span style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: color, display: 'inline-block',
+                }} />
+              )}
               {k.toUpperCase()}
             </button>
           )
         })}
+
+        <span style={{
+          marginLeft: 'auto',
+          flexShrink: 0,
+          fontFamily: 'var(--font-label)',
+          fontSize: 9,
+          color: 'var(--text-dim)',
+          letterSpacing: '0.1em',
+          paddingLeft: 8,
+        }}>
+          {selectedKpis.length} / {MAX_KPI_SELECTION}
+        </span>
       </div>
+
+      <style>{`
+        @keyframes kpi-shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-3px); }
+          75% { transform: translateX(3px); }
+        }
+      `}</style>
     </div>
   )
 }
