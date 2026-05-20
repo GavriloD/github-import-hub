@@ -139,8 +139,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  body {
-    background-color: var(--color-background);
+  html, body {
+    background-color: #0d1520;
     color: var(--color-foreground);
     font-family: var(--font-label);
     overscroll-behavior: none;
@@ -197,7 +197,7 @@
 
 @media (min-width: 768px) {
   .page-root {
-    max-width: min(1280px, 100%);
+    max-width: 100%;
     display: grid;
     grid-template-areas:
       "header  header"
