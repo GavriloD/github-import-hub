@@ -38,16 +38,21 @@ export const KPI_DUMMY: Record<string, KpiSeries> = {
   },
 }
 
-// Brand-safe palette: pick colors that are distinguishable but stay within
-// the cool / muted spectrum required by BRAND.md (no saturated warms).
-export const KPI_COLORS: Record<string, string> = {
-  Revenue: '#7eb3d4',        // steel blue (brand accent)
-  Korisnici: '#6bbfa0',      // success green
-  CAC: '#c97a7a',            // warning red (cost going up = bad)
-  LTV: '#c4a96b',            // gold
-  NPS: '#9b87c4',            // muted mauve
-  'Market Share': '#7a90a8', // slate
-  Retention: '#8fb8c9',      // pale steel
+// 5 complementary, brand-safe colors assigned by selection order.
+// 1st clicked KPI = palette[0], 2nd = palette[1], etc.
+export const KPI_PALETTE: string[] = [
+  '#7eb3d4', // steel blue
+  '#c4a96b', // gold
+  '#6bbfa0', // sage green
+  '#9b87c4', // muted mauve
+  '#d49a7e', // soft terracotta
+]
+
+export const MAX_KPI_SELECTION = 5
+
+export function colorForKpi(label: string, selected: string[]): string {
+  const idx = selected.indexOf(label)
+  if (idx === -1) return 'var(--text-dim)'
+  return KPI_PALETTE[idx % KPI_PALETTE.length]
 }
 
-export const MAX_KPI_SELECTION = 3
