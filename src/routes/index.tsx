@@ -44,10 +44,6 @@ function NuroLabDashboard() {
     );
   }
 
-  function handleReplaceKpi(oldKpi: string, newKpi: string) {
-    setSelectedKpis((prev) => prev.map((x) => (x === oldKpi ? newKpi : x)));
-  }
-
   return (
     <main className="page-root">
       {/* ── Header ── */}
@@ -125,7 +121,6 @@ function NuroLabDashboard() {
           selectedKpis={selectedKpis}
           onPreset={handlePreset}
           onToggleKpi={handleToggleKpi}
-          onReplaceKpi={handleReplaceKpi}
         />
       </div>
 
