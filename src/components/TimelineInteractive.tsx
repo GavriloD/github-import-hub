@@ -91,7 +91,7 @@ export function TimelineInteractive({
   const SVG_H = LABEL_Y + 14
 
   // Assign vertical lane per series so multiple lines don't overlap
-  const LANE_PAD = 3
+  const LANE_PAD = 0
   const laneH = rawSeries.length > 1 ? CHART_H / rawSeries.length : CHART_H
   const series = rawSeries.map((s, idx) => ({
     ...s,
