@@ -1,4 +1,4 @@
-// NuroLab ZenFlow — Timeline | Q3 2026 – Q4 2028
+// NuroLab ZenFlow — Timeline | Q3 2026 – Q2 2029
 // Growth triggers from NuroLab_KPI.xlsx
 
 export type QuarterType = 'launch' | 'neutral' | 'milestone' | 'growth' | 'competitor'
@@ -200,6 +200,40 @@ export const DATA: TimelineData = {
         { label: "30d Buyers", value: null, delta: null, deltaType: "up" },
         { label: "90d Buyers", value: null, delta: null, deltaType: "up" },
         { label: "NPS", value: null, delta: null, deltaType: "up" },
+      ]
+    },
+
+    // ─── 2029 ────────────────────────────────────────────────────
+
+    {
+      id: "q1-2029",
+      label: "Q1 2029",
+      shortLabel: "Q1 '29",
+      type: "competitor",
+      icon: "⚡",
+      title: "Competitor",
+      context: "Novi competitor talas u Q1. Sezonski pad amortizovan jakom retention bazom. 180d community drži NPS stabilan.",
+      kpis: [
+        { label: "Revenue", value: null, delta: null, deltaType: "down" },
+        { label: "30d Buyers", value: null, delta: null, deltaType: "down" },
+        { label: "180d Buyers", value: null, delta: null, deltaType: "base" },
+        { label: "NPS", value: null, delta: null, deltaType: "up" },
+      ]
+    },
+
+    {
+      id: "q2-2029",
+      label: "Q2 2029",
+      shortLabel: "Q2 '29",
+      type: "milestone",
+      icon: "🏆",
+      title: "Podcast + Konf. + Comp.",
+      context: "Tri aktivatora u sinergiji — rekordni kvartal. Konferencija + podcast + competitor pritisak. NPS skok, buyer baza na novom maksimumu.",
+      kpis: [
+        { label: "Revenue", value: null, delta: null, deltaType: "up" },
+        { label: "30d Buyers", value: null, delta: null, deltaType: "up" },
+        { label: "NPS", value: null, delta: null, deltaType: "up" },
+        { label: "180d Buyers", value: null, delta: null, deltaType: "up" },
       ]
     },
 

@@ -12,15 +12,17 @@ export const Route = createFileRoute("/")({
   component: NuroLabDashboard,
 });
 
-// Q3'26–Q4'28 — 10 quarters total
+// Q3'26–Q2'29 — 12 quarters total
 // y1 = Q3-Q4 2026 (idx 0-1)
 // y2 = Q1-Q4 2027 (idx 2-5)
 // y3 = Q1-Q4 2028 (idx 6-9)
+// y4 = Q1-Q2 2029 (idx 10-11)
 const PRESET_RANGES: Record<string, [number, number]> = {
   y1: [0, 1],
   y2: [2, 5],
   y3: [6, 9],
-  all: [0, 9],
+  y4: [10, 11],
+  all: [0, 11],
 };
 
 function NuroLabDashboard() {
