@@ -30,7 +30,7 @@ export function FilterBar({ selectedKpis, onToggleKpi, scenario, onScenario }: F
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 6,
+        gap: 0,
         padding: '10px 20px 12px',
         overflowX: 'auto',
       }}>
@@ -45,8 +45,9 @@ export function FilterBar({ selectedKpis, onToggleKpi, scenario, onScenario }: F
               style={{
                 flexShrink: 0,
                 padding: '6px 12px',
-                borderRadius: 20,
+                borderRadius: 4,
                 border: `1px solid ${active ? color : 'var(--border-mid)'}`,
+                marginRight: -1,
                 background: active ? `${color}1f` : 'transparent',
                 fontFamily: 'var(--font-label)',
                 fontSize: 12,
