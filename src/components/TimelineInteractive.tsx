@@ -10,7 +10,7 @@ const TYPE_COLORS: Record<QuarterType, string> = {
   competitor: '#c97a7a',
 }
 
-const LANE_MIN_H = 50   // minimum px per lane so variation is always visible
+const LANE_MIN_H = 28   // minimum px per lane so variation is always visible
 const CHART_H_SINGLE = 130
 const PAD = 24
 
