@@ -127,7 +127,7 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
           color: data ? 'var(--text)' : 'var(--text-dim)',
           letterSpacing: '-0.01em',
         }}>
-          {data?.cumulative ?? '—'}
+          {data?.quarterly ?? data?.cumulative ?? '—'}
         </div>
         {data?.delta && (
           <span style={{
@@ -140,7 +140,7 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
         )}
       </div>
 
-      {/* Sub-row: label + quarterly if applicable */}
+      {/* Sub-row: label + cumulative if applicable */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         marginTop: 8,
@@ -159,10 +159,10 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
           <>
             <span style={{ color: 'rgba(74,96,128,0.4)', fontSize: 10 }}>·</span>
             <span style={{ fontFamily: 'var(--font-label)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.08em' }}>
-              THIS Q
+              CUMULATIVE
             </span>
             <span style={{ fontFamily: 'var(--font-label)', fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-              {data.quarterly}
+              {data.cumulative}
             </span>
           </>
         )}
@@ -194,7 +194,7 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
       </span>
 
       <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'baseline', gap: 8 }}>
-        {/* Per-quarter value (dimmer, smaller) */}
+        {/* Cumulative value (dimmer, smaller) */}
         {data?.quarterly && (
           <span style={{
             display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1,
@@ -205,7 +205,7 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
               color: 'var(--text-dim)',
               letterSpacing: '0.1em',
             }}>
-              THIS Q
+              CUMULATIVE
             </span>
             <span style={{
               fontFamily: 'var(--font-serif)',
@@ -214,12 +214,12 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
               color: 'var(--text-dim)',
               letterSpacing: '-0.01em',
             }}>
-              {data.quarterly}
+              {data.cumulative}
             </span>
           </span>
         )}
 
-        {/* Cumulative value (main) */}
+        {/* This quarter value (main) */}
         <span style={{
           display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1,
         }}>
@@ -230,7 +230,7 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
               color: 'var(--text-dim)',
               letterSpacing: '0.1em',
             }}>
-              CUMULATIVE
+              THIS Q
             </span>
           )}
           <span style={{
@@ -243,7 +243,7 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
               color: 'var(--text)',
               letterSpacing: '-0.01em',
             }}>
-              {data?.cumulative ?? '—'}
+              {data?.quarterly ?? data?.cumulative ?? '—'}
             </span>
             {data?.delta && (
               <span style={{
