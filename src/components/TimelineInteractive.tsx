@@ -10,7 +10,7 @@ const TYPE_COLORS: Record<QuarterType, string> = {
   competitor: '#c97a7a',
 }
 
-const CHART_H = 72
+const CHART_H = 130
 const TRACK_Y = CHART_H + 28
 const DOT_Y = TRACK_Y
 const LABEL_Y = DOT_Y + 22

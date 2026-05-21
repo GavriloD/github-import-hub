@@ -217,7 +217,7 @@
     background: var(--navy-deep);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .area-timeline {
     grid-area: timeline;

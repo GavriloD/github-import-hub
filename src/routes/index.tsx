@@ -6,7 +6,6 @@ import { KPICard } from "@/components/KPICard";
 import { TimelineInteractive } from "@/components/TimelineInteractive";
 import { TypeLegend } from "@/components/TypeLegend";
 import { FocusHook } from "@/components/FocusHook";
-import { ScenarioPill } from "@/components/ScenarioPill";
 import type { Scenario } from "@/data/kpi-values";
 
 export const Route = createFileRoute("/")({
@@ -100,6 +99,8 @@ function NuroLabDashboard() {
         <FilterBar
           selectedKpis={selectedKpis}
           onToggleKpi={handleToggleKpi}
+          scenario={scenario}
+          onScenario={setScenario}
         />
       </div>
 
@@ -179,9 +180,6 @@ function NuroLabDashboard() {
           made by gavrilo
         </a>
       </div>
-
-      {/* ── Scenario Pill (floating) ── */}
-      <ScenarioPill scenario={scenario} onScenario={setScenario} />
 
       <FocusHook />
     </main>

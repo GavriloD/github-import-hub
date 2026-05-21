@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { colorForKpi, MAX_KPI_SELECTION, KPI_OPTIONS } from '@/data/kpi-values'
+import { ScenarioPill } from '@/components/ScenarioPill'
+import type { Scenario } from '@/data/kpi-values'
 
 interface FilterBarProps {
   selectedKpis: string[]
   onToggleKpi: (k: string) => void
+  scenario: Scenario
+  onScenario: (s: Scenario) => void
 }
 
-export function FilterBar({ selectedKpis, onToggleKpi }: FilterBarProps) {
+export function FilterBar({ selectedKpis, onToggleKpi, scenario, onScenario }: FilterBarProps) {
   const [shakeKey, setShakeKey] = useState<string | null>(null)
 
   function handleChipClick(k: string) {
@@ -22,7 +26,7 @@ export function FilterBar({ selectedKpis, onToggleKpi }: FilterBarProps) {
 
   return (
     <div style={{ borderBottom: '1px solid var(--border)' }}>
-      {/* KPI chips */}
+      {/* KPI chips + scenario pill in one row */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -66,18 +70,18 @@ export function FilterBar({ selectedKpis, onToggleKpi }: FilterBarProps) {
           )
         })}
 
-        <span style={{
-          marginLeft: 'auto',
+        {/* Divider */}
+        <div style={{
           flexShrink: 0,
-          fontFamily: 'var(--font-label)',
-          fontSize: 16,
-          fontWeight: 500,
-          color: selectedKpis.length === MAX_KPI_SELECTION ? 'var(--accent)' : 'var(--text-dim)',
-          letterSpacing: '0.1em',
-          paddingLeft: 8,
-        }}>
-          {selectedKpis.length} / {MAX_KPI_SELECTION}
-        </span>
+          width: 1,
+          height: 20,
+          background: 'rgba(74,96,128,0.25)',
+          marginLeft: 4,
+          marginRight: 4,
+        }} />
+
+        {/* Scenario pill inline */}
+        <ScenarioPill scenario={scenario} onScenario={onScenario} />
       </div>
 
       <style>{`
