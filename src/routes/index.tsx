@@ -6,22 +6,29 @@ import { KPICard } from "@/components/KPICard";
 import { TimelineInteractive } from "@/components/TimelineInteractive";
 import { TypeLegend } from "@/components/TypeLegend";
 import { FocusHook } from "@/components/FocusHook";
+import { ScenarioPill } from "@/components/ScenarioPill";
+import type { Scenario } from "@/data/kpi-values";
 
 export const Route = createFileRoute("/")({
   component: NuroLabDashboard,
 });
 
+// Q3'26–Q4'28 — 10 quarters total
+// y1 = Q3-Q4 2026 (idx 0-1)
+// y2 = Q1-Q4 2027 (idx 2-5)
+// y3 = Q1-Q4 2028 (idx 6-9)
 const PRESET_RANGES: Record<string, [number, number]> = {
-  y1: [0, 3],
-  y2: [4, 7],
-  y3: [8, 11],
-  all: [0, 11],
+  y1: [0, 1],
+  y2: [2, 5],
+  y3: [6, 9],
+  all: [0, 9],
 };
 
 function NuroLabDashboard() {
   const [preset, setPreset] = useState("all");
   const [selectedKpis, setSelectedKpis] = useState<string[]>(["Revenue"]);
   const [activeIndexInView, setActiveIndexInView] = useState(0);
+  const [scenario, setScenario] = useState<Scenario>("base");
 
   const [start, end] = PRESET_RANGES[preset];
   const visibleQuarters = useMemo(
@@ -57,7 +64,7 @@ function NuroLabDashboard() {
           borderBottom: "1px solid var(--border)",
         }}
       >
-        {/* NuroLab wordmark logo */}
+        {/* NuroLab wordmark */}
         <div
           style={{
             background: "rgba(126,179,212,0.06)",
@@ -79,7 +86,7 @@ function NuroLabDashboard() {
           </span>
         </div>
 
-        {/* ZenFlow — bez datuma */}
+        {/* ZenFlow */}
         <div
           style={{
             fontFamily: "var(--font-serif)",
@@ -113,6 +120,7 @@ function NuroLabDashboard() {
             quarter={activeQuarter}
             globalIndex={globalIndex}
             kpiLabels={selectedKpis}
+            scenario={scenario}
           />
         )}
       </div>
@@ -136,6 +144,7 @@ function NuroLabDashboard() {
             onActiveChange={setActiveIndexInView}
             kpiLabels={selectedKpis}
             startOffset={start}
+            scenario={scenario}
           />
         </div>
         <TypeLegend />
@@ -177,6 +186,9 @@ function NuroLabDashboard() {
           made by gavrilo
         </a>
       </div>
+
+      {/* ── Scenario Pill (floating) ── */}
+      <ScenarioPill scenario={scenario} onScenario={setScenario} />
 
       <FocusHook />
     </main>

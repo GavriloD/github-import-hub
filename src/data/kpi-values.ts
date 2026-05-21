@@ -1,5 +1,7 @@
-// DUMMY — replace with real numbers when research team delivers
-// Each array is one value per quarter (index 0 = Q1 2025 … index 11 = Q4 2027)
+// Real KPI data — NuroLab ZenFlow | Q3 2026 – Q4 2028
+// Source: NuroLab_KPI.xlsx (3 scenarios × 5 KPIs × 10 quarters)
+
+export type Scenario = 'conservative' | 'base' | 'optimistic'
 
 export interface KpiSeries {
   values: number[]
@@ -7,41 +9,89 @@ export interface KpiSeries {
   unit?: string
 }
 
-export const KPI_DUMMY: Record<string, KpiSeries> = {
-  // Revenue — quarterly in €k
-  Revenue: {
-    values: [12, 28, 55, 95, 110, 150, 210, 290, 360, 440, 560, 720],
-    format: (n) => `€${n}k`,
+const fmt = {
+  eur: (n: number) => '€' + n.toLocaleString('de-DE'),
+  count: (n: number) => String(n),
+  nps: (n: number) => String(n),
+}
+
+export const KPI_SCENARIOS: Record<Scenario, Record<string, KpiSeries>> = {
+  conservative: {
+    Revenue: {
+      values: [13700, 23980, 19464, 25503, 27366, 31306, 30520, 38763, 40136, 44350],
+      format: fmt.eur,
+    },
+    '30d Buyers': {
+      values: [50, 70, 36, 60, 59, 69, 60, 90, 84, 95],
+      format: fmt.count,
+    },
+    '90d Buyers': {
+      values: [30, 42, 22, 36, 35, 41, 36, 54, 50, 57],
+      format: fmt.count,
+    },
+    '180d Buyers': {
+      values: [20, 28, 14, 24, 24, 28, 24, 36, 34, 38],
+      format: fmt.count,
+    },
+    NPS: {
+      values: [28, 31, 27, 33, 36, 39, 38, 44, 47, 50],
+      format: fmt.nps,
+    },
   },
-  // CAC — cost to acquire one customer in €
-  CAC: {
-    values: [42, 38, 31, 28, 36, 33, 30, 27, 26, 25, 24, 23],
-    format: (n) => `€${n}`,
+  base: {
+    Revenue: {
+      values: [41100, 70570, 57912, 76406, 81961, 93975, 91480, 116129, 120328, 133050],
+      format: fmt.eur,
+    },
+    '30d Buyers': {
+      values: [150, 205, 108, 179, 176, 208, 180, 268, 252, 285],
+      format: fmt.count,
+    },
+    '90d Buyers': {
+      values: [90, 123, 65, 107, 106, 124, 108, 161, 151, 171],
+      format: fmt.count,
+    },
+    '180d Buyers': {
+      values: [60, 82, 43, 72, 71, 83, 72, 107, 101, 114],
+      format: fmt.count,
+    },
+    NPS: {
+      values: [30, 35, 33, 41, 44, 49, 52, 60, 63, 68],
+      format: fmt.nps,
+    },
   },
-  // 30-day Retention — % who reorder within 30 days
-  '30d Retention': {
-    values: [31, 38, 44, 49, 47, 51, 55, 58, 60, 62, 64, 66],
-    format: (n) => `${n}%`,
-  },
-  // 90-day Retention — % still active after 90 days
-  '90d Retention': {
-    values: [18, 24, 31, 37, 35, 39, 44, 48, 51, 53, 56, 58],
-    format: (n) => `${n}%`,
-  },
-  // NPS — Net Promoter Score (0–100)
-  NPS: {
-    values: [42, 48, 55, 60, 58, 62, 65, 68, 70, 71, 73, 74],
-    format: (n) => `${n}`,
+  optimistic: {
+    Revenue: {
+      values: [82200, 141277, 115904, 152892, 164002, 187813, 182960, 232258, 240736, 266180],
+      format: fmt.eur,
+    },
+    '30d Buyers': {
+      values: [300, 410, 216, 358, 353, 414, 360, 537, 504, 570],
+      format: fmt.count,
+    },
+    '90d Buyers': {
+      values: [180, 246, 130, 215, 212, 249, 216, 322, 302, 342],
+      format: fmt.count,
+    },
+    '180d Buyers': {
+      values: [120, 164, 86, 143, 141, 166, 144, 215, 202, 228],
+      format: fmt.count,
+    },
+    NPS: {
+      values: [36, 41, 38, 46, 51, 55, 54, 62, 66, 70],
+      format: fmt.nps,
+    },
   },
 }
 
-// 5 complementary, brand-safe colors assigned by selection order.
-// 1st clicked KPI = palette[0], 2nd = palette[1], etc.
+export const KPI_OPTIONS = ['Revenue', '30d Buyers', '90d Buyers', '180d Buyers', 'NPS']
+
+// 5 complementary brand-safe colors, assigned by selection order
 export const KPI_PALETTE: string[] = [
   '#7eb3d4', // steel blue  — Revenue
-  '#6bbfa0', // sage green  — CAC
-  '#c4a96b', // gold        — 30d Retention
-  '#c97a7a', // coral red   — 90d Retention
+  '#6bbfa0', // sage green  — 30d Buyers
+  '#c4a96b', // gold        — 90d Buyers
+  '#c97a7a', // coral red   — 180d Buyers
   '#a78bd4', // violet      — NPS
 ]
 
@@ -52,4 +102,3 @@ export function colorForKpi(label: string, selected: string[]): string {
   if (idx === -1) return 'var(--text-dim)'
   return KPI_PALETTE[idx % KPI_PALETTE.length]
 }
-

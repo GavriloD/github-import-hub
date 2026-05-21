@@ -1,19 +1,11 @@
 import { useState } from 'react'
-import { colorForKpi, MAX_KPI_SELECTION } from '@/data/kpi-values'
+import { colorForKpi, MAX_KPI_SELECTION, KPI_OPTIONS } from '@/data/kpi-values'
 
 const PRESETS = [
-  { id: 'y1', label: 'Y1', sub: '2025' },
-  { id: 'y2', label: 'Y2', sub: '2026' },
-  { id: 'y3', label: 'Y3', sub: '2027' },
+  { id: 'y1', label: 'Y1', sub: '2026' },
+  { id: 'y2', label: 'Y2', sub: '2027' },
+  { id: 'y3', label: 'Y3', sub: '2028' },
   { id: 'all', label: '3Y', sub: 'sve' },
-]
-
-export const KPI_OPTIONS = [
-  'Revenue',
-  'CAC',
-  '30d Retention',
-  '90d Retention',
-  'NPS',
 ]
 
 interface FilterBarProps {

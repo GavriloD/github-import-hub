@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_DUMMY, colorForKpi } from '@/data/kpi-values'
+import { KPI_SCENARIOS, colorForKpi, type Scenario } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -22,10 +22,11 @@ interface KPICardProps {
   quarter: Quarter
   globalIndex: number
   kpiLabels: string[]
+  scenario: Scenario
 }
 
-function readValue(label: string, globalIndex: number): { value: string; delta: string | null; deltaType: 'up' | 'down' | 'base' } | null {
-  const src = KPI_DUMMY[label]
+function readValue(label: string, globalIndex: number, scenario: Scenario): { value: string; delta: string | null; deltaType: 'up' | 'down' | 'base' } | null {
+  const src = KPI_SCENARIOS[scenario][label]
   if (!src) return null
   const v = src.values[globalIndex]
   if (v == null) return null
@@ -35,17 +36,15 @@ function readValue(label: string, globalIndex: number): { value: string; delta: 
   if (prev != null && prev !== 0) {
     const pct = ((v - prev) / Math.abs(prev)) * 100
     if (Math.abs(pct) >= 0.5) {
-      // For CAC, lower is better → invert color semantics
-      const isCost = label === 'CAC'
       const up = pct > 0
-      deltaType = isCost ? (up ? 'down' : 'up') : (up ? 'up' : 'down')
+      deltaType = up ? 'up' : 'down'
       delta = `${up ? '+' : ''}${pct.toFixed(0)}%`
     }
   }
   return { value: src.format(v), delta, deltaType }
 }
 
-export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
+export function KPICard({ quarter, globalIndex, kpiLabels, scenario }: KPICardProps) {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
@@ -91,11 +90,11 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
 
       <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.22s ease' }}>
         {isSingle ? (
-          <SingleKpi label={kpiLabels[0]} globalIndex={globalIndex} selected={kpiLabels} />
+          <SingleKpi label={kpiLabels[0]} globalIndex={globalIndex} selected={kpiLabels} scenario={scenario} />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {kpiLabels.map((label) => (
-              <KpiRow key={label} label={label} globalIndex={globalIndex} selected={kpiLabels} />
+              <KpiRow key={label} label={label} globalIndex={globalIndex} selected={kpiLabels} scenario={scenario} />
             ))}
           </div>
         )}
@@ -104,8 +103,8 @@ export function KPICard({ quarter, globalIndex, kpiLabels }: KPICardProps) {
   )
 }
 
-function SingleKpi({ label, globalIndex, selected }: { label: string; globalIndex: number; selected: string[] }) {
-  const data = readValue(label, globalIndex)
+function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; globalIndex: number; selected: string[]; scenario: Scenario }) {
+  const data = readValue(label, globalIndex, scenario)
   const color = colorForKpi(label, selected)
   return (
     <div>
@@ -147,8 +146,8 @@ function SingleKpi({ label, globalIndex, selected }: { label: string; globalInde
   )
 }
 
-function KpiRow({ label, globalIndex, selected }: { label: string; globalIndex: number; selected: string[] }) {
-  const data = readValue(label, globalIndex)
+function KpiRow({ label, globalIndex, selected, scenario }: { label: string; globalIndex: number; selected: string[]; scenario: Scenario }) {
+  const data = readValue(label, globalIndex, scenario)
   const color = colorForKpi(label, selected)
   return (
     <div style={{

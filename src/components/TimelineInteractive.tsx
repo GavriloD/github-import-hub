@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_DUMMY, colorForKpi } from '@/data/kpi-values'
+import { KPI_SCENARIOS, colorForKpi, type Scenario } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -22,9 +22,8 @@ interface TimelineInteractiveProps {
   activeIndex: number
   onActiveChange: (i: number) => void
   kpiLabels: string[]
-  // index into DATA.quarters of the first visible quarter — so we can read
-  // dummy values from KPI_DUMMY using the global quarter index.
   startOffset: number
+  scenario: Scenario
 }
 
 export function TimelineInteractive({
@@ -33,6 +32,7 @@ export function TimelineInteractive({
   onActiveChange,
   kpiLabels,
   startOffset,
+  scenario,
 }: TimelineInteractiveProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   const [svgW, setSvgW] = useState(340)
@@ -75,7 +75,7 @@ export function TimelineInteractive({
   // Build one normalized series per selected KPI.
   const series = kpiLabels
     .map((label) => {
-      const src = KPI_DUMMY[label]
+      const src = KPI_SCENARIOS[scenario][label]
       if (!src) return null
       const slice = src.values.slice(startOffset, startOffset + n)
       const max = Math.max(...slice)
