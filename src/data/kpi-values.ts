@@ -122,14 +122,14 @@ export const KPI_SCENARIOS: Record<Scenario, Record<string, KpiSeries>> = {
 
 export const KPI_OPTIONS = ['Revenue', 'Buyers', '30d Buyers', '90d Buyers', '180d Buyers', 'NPS']
 
-// 6 complementary brand-safe colors, assigned by selection order
+// 6 complementary colors — evenly spaced on the hue wheel, tuned for dark navy bg
 export const KPI_PALETTE: string[] = [
-  '#7eb3d4', // steel blue  — Revenue
-  '#5ccfb8', // teal        — Buyers
-  '#6bbfa0', // sage green  — 30d Buyers
-  '#c4a96b', // gold        — 90d Buyers
-  '#c97a7a', // coral red   — 180d Buyers
-  '#a78bd4', // violet      — NPS
+  '#7eb3d4', // 205° blue      — Revenue
+  '#7dd4b0', // 160° mint      — Buyers
+  '#d4c47a', //  48° gold      — 30d Buyers
+  '#d4896e', //  18° coral     — 90d Buyers
+  '#a87dd4', // 270° violet    — 180d Buyers
+  '#d47ab0', // 320° rose      — NPS
 ]
 
 export const MAX_KPI_SELECTION = 6
