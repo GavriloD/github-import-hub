@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_SCENARIOS, colorForKpi, type Scenario } from '@/data/kpi-values'
+import { KPI_SCENARIOS, colorForKpi, getDisplayValues, type Scenario } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -28,9 +28,10 @@ interface KPICardProps {
 function readValue(label: string, globalIndex: number, scenario: Scenario): { value: string; delta: string | null; deltaType: 'up' | 'down' | 'base' } | null {
   const src = KPI_SCENARIOS[scenario][label]
   if (!src) return null
-  const v = src.values[globalIndex]
+  const display = getDisplayValues(src)
+  const v = display[globalIndex]
   if (v == null) return null
-  const prev = globalIndex > 0 ? src.values[globalIndex - 1] : null
+  const prev = globalIndex > 0 ? display[globalIndex - 1] : null
   let delta: string | null = null
   let deltaType: 'up' | 'down' | 'base' = 'base'
   if (prev != null && prev !== 0) {

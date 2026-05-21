@@ -68,7 +68,7 @@ export function FocusHook() {
         textAlign: 'center',
         lineHeight: 1.2,
       }}>
-        Izgubio si fokus?
+        Nestao ti je fokus?
       </div>
       <div style={{
         fontFamily: 'var(--font-label)',

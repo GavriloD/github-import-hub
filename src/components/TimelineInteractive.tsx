@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Quarter, QuarterType } from '@/data/timeline-data'
-import { KPI_SCENARIOS, colorForKpi, type Scenario } from '@/data/kpi-values'
+import { KPI_SCENARIOS, colorForKpi, getDisplayValues, type Scenario } from '@/data/kpi-values'
 
 const TYPE_COLORS: Record<QuarterType, string> = {
   launch: '#7eb3d4',
@@ -77,7 +77,8 @@ export function TimelineInteractive({
     .map((label) => {
       const src = KPI_SCENARIOS[scenario][label]
       if (!src) return null
-      const slice = src.values.slice(startOffset, startOffset + n)
+      const allDisplay = getDisplayValues(src)
+      const slice = allDisplay.slice(startOffset, startOffset + n)
       const max = Math.max(...slice)
       const min = Math.min(...slice)
       return { label, color: colorForKpi(label, kpiLabels), values: slice, max, min }
