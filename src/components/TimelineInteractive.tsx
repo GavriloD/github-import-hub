@@ -74,8 +74,7 @@ export function TimelineInteractive({
     .map((label) => {
       const src = KPI_SCENARIOS[scenario][label]
       if (!src) return null
-      const allDisplay = getDisplayValues(src)
-      const slice = allDisplay.slice(startOffset, startOffset + n)
+      const slice = src.values.slice(startOffset, startOffset + n)
       const max = Math.max(...slice)
       const min = Math.min(...slice)
       return { label, color: colorForKpi(label, kpiLabels), values: slice, max, min }
