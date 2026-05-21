@@ -10,11 +10,8 @@ const TYPE_COLORS: Record<QuarterType, string> = {
   competitor: '#c97a7a',
 }
 
-const CHART_H = 130
-const TRACK_Y = CHART_H + 28
-const DOT_Y = TRACK_Y
-const LABEL_Y = DOT_Y + 22
-const SVG_H = LABEL_Y + 14
+const LANE_MIN_H = 50   // minimum px per lane so variation is always visible
+const CHART_H_SINGLE = 130
 const PAD = 24
 
 interface TimelineInteractiveProps {
@@ -86,6 +83,13 @@ export function TimelineInteractive({
     .filter((s): s is NonNullable<typeof s> => !!s)
 
   const hasData = rawSeries.length > 0
+
+  // Dynamic chart height: each lane gets at least LANE_MIN_H px
+  const CHART_H = Math.max(CHART_H_SINGLE, rawSeries.length * LANE_MIN_H)
+  const TRACK_Y = CHART_H + 28
+  const DOT_Y = TRACK_Y
+  const LABEL_Y = DOT_Y + 22
+  const SVG_H = LABEL_Y + 14
 
   // Assign vertical lane per series so multiple lines don't overlap
   const LANE_PAD = 3
