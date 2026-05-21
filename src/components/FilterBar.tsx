@@ -1,21 +1,12 @@
 import { useState } from 'react'
 import { colorForKpi, MAX_KPI_SELECTION, KPI_OPTIONS } from '@/data/kpi-values'
 
-const PRESETS = [
-  { id: 'y1', label: 'Y1', sub: '2026' },
-  { id: 'y2', label: 'Y2', sub: '2027' },
-  { id: 'y3', label: 'Y3', sub: '2028' },
-  { id: 'all', label: '3Y', sub: 'sve' },
-]
-
 interface FilterBarProps {
-  preset: string
   selectedKpis: string[]
-  onPreset: (p: string) => void
   onToggleKpi: (k: string) => void
 }
 
-export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: FilterBarProps) {
+export function FilterBar({ selectedKpis, onToggleKpi }: FilterBarProps) {
   const [shakeKey, setShakeKey] = useState<string | null>(null)
 
   function handleChipClick(k: string) {
@@ -31,52 +22,12 @@ export function FilterBar({ preset, selectedKpis, onPreset, onToggleKpi }: Filte
 
   return (
     <div style={{ borderBottom: '1px solid var(--border)' }}>
-      {/* Presets */}
-      <div style={{ display: 'flex', gap: 4, padding: '10px 20px 10px' }}>
-        {PRESETS.map((p) => {
-          const active = preset === p.id
-          return (
-            <button
-              key={p.id}
-              onClick={() => onPreset(p.id)}
-              style={{
-                flex: 1,
-                padding: '7px 4px',
-                borderRadius: 6,
-                border: `1px solid ${active ? 'var(--accent)' : 'var(--border-mid)'}`,
-                background: active ? 'rgba(126,179,212,0.1)' : 'transparent',
-                transition: 'all 0.22s ease',
-              }}
-            >
-              <div style={{
-                fontFamily: 'var(--font-label)',
-                fontSize: 15,
-                fontWeight: active ? 500 : 300,
-                color: active ? 'var(--accent)' : 'var(--text-muted)',
-                letterSpacing: '0.05em',
-              }}>
-                {p.label}
-              </div>
-              <div style={{
-                fontFamily: 'var(--font-label)',
-                fontSize: 11,
-                color: active ? 'rgba(126,179,212,0.6)' : 'var(--text-dim)',
-                letterSpacing: '0.08em',
-                marginTop: 1,
-              }}>
-                {p.sub}
-              </div>
-            </button>
-          )
-        })}
-      </div>
-
       {/* KPI chips */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         gap: 6,
-        padding: '0 20px 12px',
+        padding: '10px 20px 12px',
         overflowX: 'auto',
       }}>
         {KPI_OPTIONS.map((k) => {

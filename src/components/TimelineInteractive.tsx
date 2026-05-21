@@ -72,8 +72,8 @@ export function TimelineInteractive({
 
   const onPointerUp = useCallback(() => setDragging(false), [])
 
-  // Build one normalized series per selected KPI.
-  const series = kpiLabels
+  // Build one normalized series per selected KPI, each in its own lane.
+  const rawSeries = kpiLabels
     .map((label) => {
       const src = KPI_SCENARIOS[scenario][label]
       if (!src) return null
@@ -84,7 +84,16 @@ export function TimelineInteractive({
     })
     .filter((s): s is NonNullable<typeof s> => !!s)
 
-  const hasData = series.length > 0
+  const hasData = rawSeries.length > 0
+
+  // Assign vertical lane per series so multiple lines don't overlap
+  const LANE_PAD = 3
+  const laneH = rawSeries.length > 1 ? CHART_H / rawSeries.length : CHART_H
+  const series = rawSeries.map((s, idx) => ({
+    ...s,
+    yTop: rawSeries.length > 1 ? idx * laneH + LANE_PAD : LANE_PAD,
+    yBot: rawSeries.length > 1 ? (idx + 1) * laneH - LANE_PAD : CHART_H - LANE_PAD,
+  }))
 
   const activeX = getX(activeIndex)
   const activeQ = quarters[activeIndex]
@@ -100,6 +109,11 @@ export function TimelineInteractive({
   })
 
   const showArea = series.length === 1
+
+  // Lane separator Y positions (between lanes, for multi-series)
+  const laneDividers = series.length > 1
+    ? series.slice(0, -1).map((_, idx) => (idx + 1) * laneH)
+    : []
 
   return (
     <div style={{ padding: '0 0 4px' }}>
@@ -124,22 +138,31 @@ export function TimelineInteractive({
             <defs>
               {series.map((s, idx) => (
                 <linearGradient key={s.label} id={`sparkGrad-${idx}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={s.color} stopOpacity="0.2" />
+                  <stop offset="0%" stopColor={s.color} stopOpacity="0.18" />
                   <stop offset="100%" stopColor={s.color} stopOpacity="0.01" />
                 </linearGradient>
               ))}
             </defs>
 
+            {/* Lane dividers */}
+            {laneDividers.map((y) => (
+              <line
+                key={y}
+                x1={PAD} y1={y} x2={svgW - PAD} y2={y}
+                stroke="rgba(74,96,128,0.12)" strokeWidth={1}
+              />
+            ))}
+
             {series.map((s, idx) => (
               <g key={s.label}>
                 {showArea && (
                   <path
-                    d={buildAreaPath(s.values, CHART_H, s.min, s.max, getX)}
+                    d={buildAreaPath(s.values, s.yTop, s.yBot, s.min, s.max, getX)}
                     fill={`url(#sparkGrad-${idx})`}
                   />
                 )}
                 <path
-                  d={buildLinePath(s.values, CHART_H, s.min, s.max, getX)}
+                  d={buildLinePath(s.values, s.yTop, s.yBot, s.min, s.max, getX)}
                   fill="none"
                   stroke={s.color}
                   strokeWidth={1.5}
@@ -174,7 +197,7 @@ export function TimelineInteractive({
           <circle
             key={`dot-${s.label}`}
             cx={activeX}
-            cy={getY(s.values[activeIndex], CHART_H, s.min, s.max)}
+            cy={getYInLane(s.values[activeIndex], s.min, s.max, s.yTop, s.yBot)}
             r={3.5}
             fill={s.color}
             stroke="var(--navy-deep)"
@@ -251,33 +274,37 @@ export function TimelineInteractive({
   )
 }
 
-function getY(val: number, chartH: number, min: number, max: number): number {
-  if (max === min) return chartH - (chartH - 10) / 2
+// Map a value to a Y coordinate within a vertical lane [yTop, yBot]
+// Higher value = lower y (higher on screen in SVG coordinate space)
+function getYInLane(val: number, min: number, max: number, yTop: number, yBot: number): number {
+  if (max === min) return (yTop + yBot) / 2
   const fraction = (val - min) / (max - min)
-  return chartH - fraction * (chartH - 10) - 4
+  return yBot - fraction * (yBot - yTop)
 }
 
 function buildLinePath(
   values: number[],
-  chartH: number,
+  yTop: number,
+  yBot: number,
   min: number,
   max: number,
   getX: (i: number) => number,
 ): string {
   return values
-    .map((v, i) => `${i === 0 ? 'M' : 'L'}${getX(i).toFixed(1)},${getY(v, chartH, min, max).toFixed(1)}`)
+    .map((v, i) => `${i === 0 ? 'M' : 'L'}${getX(i).toFixed(1)},${getYInLane(v, min, max, yTop, yBot).toFixed(1)}`)
     .join(' ')
 }
 
 function buildAreaPath(
   values: number[],
-  chartH: number,
+  yTop: number,
+  yBot: number,
   min: number,
   max: number,
   getX: (i: number) => number,
 ): string {
-  const line = buildLinePath(values, chartH, min, max, getX)
+  const line = buildLinePath(values, yTop, yBot, min, max, getX)
   const lastX = getX(values.length - 1).toFixed(1)
   const firstX = getX(0).toFixed(1)
-  return `${line} L${lastX},${chartH} L${firstX},${chartH} Z`
+  return `${line} L${lastX},${yBot} L${firstX},${yBot} Z`
 }

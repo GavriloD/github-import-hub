@@ -25,12 +25,12 @@ const PRESET_RANGES: Record<string, [number, number]> = {
 };
 
 function NuroLabDashboard() {
-  const [preset, setPreset] = useState("all");
   const [selectedKpis, setSelectedKpis] = useState<string[]>(["Revenue"]);
   const [activeIndexInView, setActiveIndexInView] = useState(0);
   const [scenario, setScenario] = useState<Scenario>("base");
 
-  const [start, end] = PRESET_RANGES[preset];
+  // Always show full 3Y period
+  const [start, end] = PRESET_RANGES["all"];
   const visibleQuarters = useMemo(
     () => DATA.quarters.slice(start, end + 1),
     [start, end]
@@ -39,11 +39,6 @@ function NuroLabDashboard() {
   const safeIndex = Math.min(activeIndexInView, visibleQuarters.length - 1);
   const activeQuarter = visibleQuarters[safeIndex];
   const globalIndex = start + safeIndex;
-
-  function handlePreset(p: string) {
-    setPreset(p);
-    setActiveIndexInView(0);
-  }
 
   function handleToggleKpi(k: string) {
     setSelectedKpis((prev) =>
@@ -103,9 +98,7 @@ function NuroLabDashboard() {
       {/* ── Filter bar ── */}
       <div className="area-filters">
         <FilterBar
-          preset={preset}
           selectedKpis={selectedKpis}
-          onPreset={handlePreset}
           onToggleKpi={handleToggleKpi}
         />
       </div>
