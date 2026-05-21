@@ -25,7 +25,14 @@ interface KPICardProps {
   scenario: Scenario
 }
 
-function readValue(label: string, globalIndex: number, scenario: Scenario): { value: string; delta: string | null; deltaType: 'up' | 'down' | 'base' } | null {
+interface ReadResult {
+  cumulative: string
+  quarterly: string | null   // null if series is not cumulative (e.g. NPS)
+  delta: string | null
+  deltaType: 'up' | 'down' | 'base'
+}
+
+function readValue(label: string, globalIndex: number, scenario: Scenario): ReadResult | null {
   const src = KPI_SCENARIOS[scenario][label]
   if (!src) return null
   const display = getDisplayValues(src)
@@ -42,7 +49,9 @@ function readValue(label: string, globalIndex: number, scenario: Scenario): { va
       delta = `${up ? '+' : ''}${pct.toFixed(0)}%`
     }
   }
-  return { value: src.format(v), delta, deltaType }
+  // Per-quarter value (only meaningful for cumulative series)
+  const quarterly = src.cumulative ? src.format(src.values[globalIndex]) : null
+  return { cumulative: src.format(v), quarterly, delta, deltaType }
 }
 
 export function KPICard({ quarter, globalIndex, kpiLabels, scenario }: KPICardProps) {
@@ -109,9 +118,7 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
   const color = colorForKpi(label, selected)
   return (
     <div>
-      <div style={{
-        display: 'flex', alignItems: 'baseline', gap: 12,
-      }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
         <div style={{
           fontFamily: 'var(--font-serif)',
           fontSize: 48,
@@ -120,7 +127,7 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
           color: data ? 'var(--text)' : 'var(--text-dim)',
           letterSpacing: '-0.01em',
         }}>
-          {data?.value ?? '—'}
+          {data?.cumulative ?? '—'}
         </div>
         {data?.delta && (
           <span style={{
@@ -132,16 +139,33 @@ function SingleKpi({ label, globalIndex, selected, scenario }: { label: string; 
           </span>
         )}
       </div>
+
+      {/* Sub-row: label + quarterly if applicable */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 6,
-        fontFamily: 'var(--font-label)',
-        fontSize: 11,
-        color: 'var(--text-dim)',
-        letterSpacing: '0.1em',
+        display: 'flex', alignItems: 'center', gap: 10,
         marginTop: 8,
       }}>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: color }} />
-        {label.toUpperCase()}
+        <span style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          fontFamily: 'var(--font-label)',
+          fontSize: 11,
+          color: 'var(--text-dim)',
+          letterSpacing: '0.1em',
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: color }} />
+          {label.toUpperCase()}
+        </span>
+        {data?.quarterly && (
+          <>
+            <span style={{ color: 'rgba(74,96,128,0.4)', fontSize: 10 }}>·</span>
+            <span style={{ fontFamily: 'var(--font-label)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.08em' }}>
+              THIS Q
+            </span>
+            <span style={{ fontFamily: 'var(--font-label)', fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+              {data.quarterly}
+            </span>
+          </>
+        )}
       </div>
     </div>
   )
@@ -168,30 +192,72 @@ function KpiRow({ label, globalIndex, selected, scenario }: { label: string; glo
       }}>
         {label.toUpperCase()}
       </span>
-      <span style={{
-        marginLeft: 'auto',
-        display: 'flex', alignItems: 'baseline', gap: 8,
-      }}>
-        <span style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 22,
-          fontWeight: 300,
-          color: 'var(--text)',
-          letterSpacing: '-0.01em',
-        }}>
-          {data?.value ?? '—'}
-        </span>
-        {data?.delta && (
+
+      <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'baseline', gap: 8 }}>
+        {/* Per-quarter value (dimmer, smaller) */}
+        {data?.quarterly && (
           <span style={{
-            fontFamily: 'var(--font-label)',
-            fontSize: 11,
-            color: data.deltaType === 'up' ? '#6bbfa0' : data.deltaType === 'down' ? '#c97a7a' : 'var(--text-dim)',
-            minWidth: 44,
-            textAlign: 'right',
+            display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1,
           }}>
-            {data.deltaType === 'up' ? '↑' : data.deltaType === 'down' ? '↓' : '·'} {data.delta}
+            <span style={{
+              fontFamily: 'var(--font-label)',
+              fontSize: 9,
+              color: 'var(--text-dim)',
+              letterSpacing: '0.1em',
+            }}>
+              THIS Q
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 13,
+              fontWeight: 300,
+              color: 'var(--text-dim)',
+              letterSpacing: '-0.01em',
+            }}>
+              {data.quarterly}
+            </span>
           </span>
         )}
+
+        {/* Cumulative value (main) */}
+        <span style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1,
+        }}>
+          {data?.quarterly && (
+            <span style={{
+              fontFamily: 'var(--font-label)',
+              fontSize: 9,
+              color: 'var(--text-dim)',
+              letterSpacing: '0.1em',
+            }}>
+              CUMULATIVE
+            </span>
+          )}
+          <span style={{
+            display: 'flex', alignItems: 'baseline', gap: 6,
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 22,
+              fontWeight: 300,
+              color: 'var(--text)',
+              letterSpacing: '-0.01em',
+            }}>
+              {data?.cumulative ?? '—'}
+            </span>
+            {data?.delta && (
+              <span style={{
+                fontFamily: 'var(--font-label)',
+                fontSize: 11,
+                color: data.deltaType === 'up' ? '#6bbfa0' : data.deltaType === 'down' ? '#c97a7a' : 'var(--text-dim)',
+                minWidth: 44,
+                textAlign: 'right',
+              }}>
+                {data.deltaType === 'up' ? '↑' : data.deltaType === 'down' ? '↓' : '·'} {data.delta}
+              </span>
+            )}
+          </span>
+        </span>
       </span>
     </div>
   )
